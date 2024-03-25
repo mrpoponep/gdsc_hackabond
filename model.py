@@ -1,9 +1,3 @@
-from IPython.display import Markdown
-import textwrap
-
-def to_markdown(text):
-  text = text.replace('•', '  *')
-  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 def create_quiz(model,nums,document,intructions=""):
     teacher_prompt=f"""
     Given the provided document, generate {nums} questions and return it as a json file with the following key: Question, Option(for multiple choice, None if is not multiple choice) and correct_answer that can be derived from its content. Please ensure the questions are relevant and coherent.
