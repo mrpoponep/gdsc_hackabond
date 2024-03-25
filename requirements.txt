@@ -3,4 +3,3 @@ streamlit-option-menu
 streamlit
 google-generativeai
 docx
-json
