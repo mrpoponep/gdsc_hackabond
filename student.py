@@ -1,5 +1,5 @@
 import streamlit as st
-from quiz import create_quiz
+from model import auto_grading
 import json
 import google.generativeai as genai
 genai.configure(api_key='AIzaSyATnwbAxhJhdp1Kt075vK11QYwIGzjHB0E')
@@ -10,15 +10,11 @@ def load_questions(uploaded_file):
     content_str = content.decode("utf-8")
     return json.loads(content_str)
 
-def save_answers(answers):
-    # Implement logic to save student answers (e.g., to a database)
-    pass
-
-def main():
+def student_app():
     st.title("Test Platform")
 
     # Teacher Upload Section
-    st.title("Teacher Section")
+    st.sidebar.title("Teacher Section")
     uploaded_file = st.sidebar.file_uploader("Upload Questions (JSON)", type=["json"],key="file")
 
     if uploaded_file is not None:
@@ -38,16 +34,22 @@ def main():
             
             if question["Option"]!=None:
                 options=[None]*len(question["Option"])
-                options[idx] = st.radio(f"Question {idx+1}:", options=range(len(question['Option'])))
-
-            answer = st.text_input("Answer:", question['correct_answer'],key=f"Question {idx} Answer",)
-            if st.button(f"Save Question {idx+1}", key=f'Save Question{idx}'):
-                # Update the question data with the new values
-                question_data["Questions"][idx]['Question'] = question_text
-                question_data["Questions"][idx]["Option"] = options
-                question_data["Questions"][idx]['answer'] = answer
-                # Print the updated question_data for debugging
-                print(question_data)
-
+                selected_option = st.radio(f"Question {idx+1}:", question["Option"])
+                answer = question["Option"][question["Option"].index(selected_option)]
+            else:
+                answer = st.text_input("Answer:",key=f"Question {idx} Answer",)
+            if question_text != "" and answer != "":
+                if st.button(f"Save Question {idx+1}", key=f'Save Question{idx}'):
+                    # Update the question data with the new values
+                    question_data["Questions"][idx]['Question'] = question_text
+                    question_data["Questions"][idx]['answer'] = answer
+                    st.success(f"Question {idx+1} saved successfully!")
+                    # Print the updated question_data for debugging
+                    print(question_data)
+        if st.button("Submit"):
+            result = auto_grading(model, str(question_data))
+            st.success("Answers submitted successfully!")
+            st.write(result)
+   
 if __name__ == "__main__":
-    main()
+    student_app()

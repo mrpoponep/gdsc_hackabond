@@ -1,12 +1,12 @@
 import streamlit as st
 import docx
-from quiz import create_quiz
+from model import create_quiz
 import json
 import google.generativeai as genai
 genai.configure(api_key='AIzaSyATnwbAxhJhdp1Kt075vK11QYwIGzjHB0E')
 model = genai.GenerativeModel('gemini-pro')
 
-def main():
+def teacher_app():
     st.title("Document to Questions Generator")
     uploaded_file = st.file_uploader("Upload a document", type=["txt", "docx"])
     Generate_Questions = True
@@ -38,7 +38,7 @@ def main():
     if st.session_state.generated_questions:
         st.write("## Generated Questions:")
         
-        st.write(st.session_state.generated_questions)
+        #st.write(st.session_state.generated_questions)
         question_data = json.loads(st.session_state.generated_questions)
     
         for idx, question in enumerate(question_data["Questions"]):
@@ -48,8 +48,10 @@ def main():
             if question["Option"]!=None:
                 options=[None]*len(question["Option"])
                 for indx,option in enumerate(question["Option"]):
-                    option_text = st.text_input(f"Answer Option {indx+1}",option,key=f"Question {idx} option {indx}",label_visibility='hidden')
+                    option_text = st.text_input(f"Option {indx+1}",option,key=f"Question {idx} option {indx}")
                     options[indx]=option_text
+            else:
+                options = None
             correct_answer = st.text_input("Correct Answer:", question['correct_answer'],key=f"Question {idx} Answer",)
             if st.button(f"Save Question {idx+1}", key=f'Save Question{idx}'):
                 # Update the question data with the new values
@@ -57,6 +59,9 @@ def main():
                 question_data["Questions"][idx]["Option"] = options
                 question_data["Questions"][idx]['correct_answer'] = correct_answer
                 # Print the updated question_data for debugging
-                print(question_data)
+                
+        if st.button(f"Download Json", key=f'Save All Questions'):
+            with open("sample.json", "w") as outfile: 
+                json.dump(question_data, outfile)
 if __name__ == "__main__":
-    main()
+    teacher_app()
