@@ -42,13 +42,19 @@ def student_app():
                 if st.button(f"Save Question {idx+1}", key=f'Save Question{idx}'):
                     # Update the question data with the new values
                     question_data["Questions"][idx]['Question'] = question_text
-                    question_data["Questions"][idx]['answer'] = answer
+                    if question["Option"]!=None:
+                        question_data["Questions"][idx]['answer'] = answer
+                    else:
+                        question_data["Questions"][idx]['answer'] = None
                     st.success(f"Question {idx+1} saved successfully!")
                     # Print the updated question_data for debugging
                     print(question_data)
         if st.button("Submit"):
-            result = auto_grading(model, str(question_data))
+            for question in question_data["Questions"]:
+                if "answer" not in question:
+                    question["answer"] = None 
             st.success("Answers submitted successfully!")
+            result = auto_grading(model, str(question_data))
             st.write(result)
    
 if __name__ == "__main__":

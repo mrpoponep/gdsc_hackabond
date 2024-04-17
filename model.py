@@ -11,32 +11,15 @@ def create_quiz(model,nums,document,intructions=""):
     Generate questions that seek information or clarification about the document's content.
     Ensure that the questions are grammatically correct and understandable.
     Aim to produce a variety of question types, such as factual, inferential, and evaluative questions.
-    Do not put excess comma at the end of the value
+    Do not put excess comma at the end of the value.
+    Do not break the lines.
     {intructions}
     Example_output
-    {{
-    "Questions": [
-    {{
-      "Question": "1+1",
-      "Option": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5"
-      ],
-      "correct_answer": "2"
-    }},
-    {{
-      "Question": "2+2",
-      "Option": null,
-      "correct_answer": "4"
-    }}
-  ]
-}}
+    {{"Questions": [{{"Question": "1+1","Option": ["1","2","3","4","5"],"correct_answer": "2"}},{{"Question": "2+2","Option": null,"correct_answer": "4"}}]}}
     """
     print(teacher_prompt)
     response = model.generate_content(teacher_prompt)
+    print(response.text)
     return response.text.replace("json", "").replace("```","")
 
 def auto_grading(model,json):
@@ -98,7 +81,7 @@ Example_Ouput
   ]
 }}
 """
-  
+  print(prompt)
   response = model.generate_content(prompt)
   return response.text
 
@@ -124,10 +107,8 @@ For each data point, its residual is the difference between the actual data poin
 Least squares fit:
 The parameters of an equation that give the lowest value for the sum of the squares of all of the residuals. '''
 
-    input_ = '''{'Questions': [{'Question': 'What is the general form of a polynomial?', 'Option': ['f(x) = x^n + x^(n-1) + ... + x^2 + x + 1', 'f(x) = anxn + an-1xn-1 + ... + a1x + a0', 'f(x) = (ax + b)/(bx + c)', 'f(x) = e^(-x/t)', 'f(x) = sin(x) + cos(x)', 'f(x) = log(x)'], 'correct_answer': 'f(x) = anxn + an-1xn-1 + ... + a1x + a0'}, {'Question': 'Which of the following is NOT a parameter in a polynomial?', 'Option': ['an', 'a0', 'b', 't', 'C'], 'correct_answer': 'b', 'answer': 'an'}, {'Question': 'Define curve fitting.', 'Option': None, 'correct_answer': 'Fitting an equation to a set of data points to test how well a quantitative model fits the data.'}, {'Question': 'What is the objective of a least squares fit?', 'Option': None, 'correct_answer': 'To minimize the sum of the squares of the residuals.'}]}
-{'Questions': [{'Question': 'What is the general form of a polynomial?', 'Option': ['f(x) = x^n + x^(n-1) + ... + x^2 + x + 1', 'f(x) = anxn + an-1xn-1 + ... + a1x + a0', 'f(x) = (ax + b)/(bx + c)', 'f(x) = e^(-x/t)', 'f(x) = sin(x) + cos(x)', 'f(x) = log(x)'], 'correct_answer': 'f(x) = anxn + an-1xn-1 + ... + a1x + a0'}, {'Question': 'Which of the following is NOT a parameter in a polynomial?', 'Option': ['an', 'a0', 'b', 't', 'C'], 'correct_answer': 'b'}, {'Question': 'Define curve fitting.', 'Option': None, 'correct_answer': 'Fitting an equation to a set of data points to test how well a quantitative model fits the data.', 'answer': 'h'}, {'Question': 'What is the objective of a least squares fit?', 'Option': None, 'correct_answer': 'To minimize the sum of the squares of the residuals.'}]}
-{'Questions': [{'Question': 'What is the general form of a polynomial?', 'Option': ['f(x) = x^n + x^(n-1) + ... + x^2 + x + 1', 'f(x) = anxn + an-1xn-1 + ... + a1x + a0', 'f(x) = (ax + b)/(bx + c)', 'f(x) = e^(-x/t)', 'f(x) = sin(x) + cos(x)', 'f(x) = log(x)'], 'correct_answer': 'f(x) = anxn + an-1xn-1 + ... + a1x + a0'}, {'Question': 'Which of the following is NOT a parameter in a polynomial?', 'Option': ['an', 'a0', 'b', 't', 'C'], 'correct_answer': 'b'}, {'Question': 'Define curve fitting.', 'Option': None, 'correct_answer': 'Fitting an equation to a set of data points to test how well a quantitative model fits the data.'}, {'Question': 'What is the objective of a least squares fit?', 'Option': None, 'correct_answer': 'To minimize the sum of the squares of the residuals.', 'answer': 'j'}]}'''
+    input_ = '''{'Questions': [{'Question': 'What is the general form of a polynomial?', 'Option': ['f(x) = x^n + x^(n-1) + ... + x^2 + x + 1', 'f(x) = anxn + an-1xn-1 + ... + a1x + a0', 'f(x) = (ax + b)/(bx + c)', 'f(x) = e^(-x/t)', 'f(x) = sin(x) + cos(x)', 'f(x) = log(x)'], 'correct_answer': 'f(x) = anxn + an-1xn-1 + ... + a1x + a0'}, {'Question': 'Which of the following is NOT a parameter in a polynomial?', 'Option': ['an', 'a0', 'b', 't', 'C'], 'correct_answer': 'b'}, {'Question': 'Define curve fitting.', 'Option': None, 'correct_answer': 'Fitting an equation to a set of data points to test how well a quantitative model fits the data.'}, {'Question': 'What is the objective of a least squares fit?', 'Option': None, 'correct_answer': 'To minimize the sum of the squares of the residuals.', 'answer': 'j'}]}'''
 
-    #res= create_quiz(model,nums=1,docx=docx,input=None,type=None,description=None)
+    #res= create_quiz(model,nums=1,document=docx,intructions=None)
     res = auto_grading(model,input_)
     print(res)
