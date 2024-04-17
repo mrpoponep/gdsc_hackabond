@@ -17,10 +17,8 @@ class QuizRequest(BaseModel):
     document: str
     instructions: str = ""
 
-class QuizResponse(BaseModel):
-    questions: str
 
-@app.post("/generate_quiz/", response_model=QuizResponse)
+@app.post("/generate_quiz/")
 async def generate_quiz(quiz_request: QuizRequest):
     try:
         model = genai.GenerativeModel('gemini-pro')
@@ -37,17 +35,12 @@ from pydantic import BaseModel
 class GradingRequest(BaseModel):
     json_data: dict
 
-class GradingResponse(BaseModel):
-    graded_data: dict
-
-@app.post("/grade/", response_model=GradingResponse)
+@app.post("/grade/", )
 async def grade(json_request: GradingRequest):
     try:
         model = genai.GenerativeModel('gemini-pro')
-        print(json_request)
         response_text = auto_grading(model, json_request.json_data)
-        graded_data = json.loads(response_text)
-        return GradingResponse(graded_data=graded_data)
+        return response_text
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

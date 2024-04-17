@@ -83,7 +83,7 @@ Example_Ouput
 """
   print(prompt)
   response = model.generate_content(prompt)
-  return response.text
+  return response.text.replace("JSON", "").replace("```","")
 
 if __name__=="__main__":
     import google.generativeai as genai

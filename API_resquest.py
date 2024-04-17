@@ -32,7 +32,8 @@ def call_generate_api():
         # Check if the request was successful
         if response.status_code == 200:
             # Print the generated quiz questions
-            print(response.json())
+            questions = (response.json())
+            print(questions)
         else:
             print(f"Error: {response.status_code}")
     except Exception as e:
@@ -53,7 +54,8 @@ def call_grade_api(json_data):
         # Check if the request was successful
         if response.status_code == 200:
             # Parse the JSON response
-            graded_data = response.json()["graded_data"]
+            graded_data = response.json()
+            print(graded_data)
             return graded_data
         else:
             print(f"Error: {response.status_code}")
@@ -81,5 +83,5 @@ json_data = {
 }
 
 if __name__ == "__main__":
-    #call_generate_api()
-    call_grade_api(json_data)
+    call_generate_api()
+    #call_grade_api(json_data)
