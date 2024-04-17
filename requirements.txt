@@ -2,4 +2,5 @@ streamlit_lottie
 streamlit-option-menu
 streamlit
 google-generativeai
-docx
+python-docx 
+
