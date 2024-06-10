@@ -88,7 +88,7 @@ Example_Ouput
 if __name__=="__main__":
     import google.generativeai as genai
     from google.generativeai.types import HarmCategory, HarmBlockThreshold
-    genai.configure(api_key='AIzaSyATnwbAxhJhdp1Kt075vK11QYwIGzjHB0E')
+    genai.configure(api_key='xxx')
     model = genai.GenerativeModel('gemini-pro')
     docx='''
 Definitions:
